@@ -5,6 +5,8 @@ import '../widgets/create_post_box.dart';
 import '../widgets/stories_row.dart';
 import '../widgets/post_card.dart';
 import '../widgets/fb_bottom_nav.dart';
+import '../widgets/reels_page.dart'; // Import dari kode teman
+import 'friends_page.dart'; // Import dari kode aslimu
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -84,13 +86,27 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const FbAppBar(),
-      body: _currentIndex == 0 ? _buildFeed() : _buildOtherTab(),
+      // AppBar disembunyikan (null) jika index == 1 (Halaman Reels)
+      appBar: _currentIndex == 1 ? null : const FbAppBar(),
+      body: _buildBody(),
       bottomNavigationBar: FbBottomNav(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
       ),
     );
+  }
+
+  Widget _buildBody() {
+    switch (_currentIndex) {
+      case 0:
+        return _buildFeed();
+      case 1:
+        return const ReelsPage(); // Render halaman Video/Reels
+      case 2:
+        return const FriendsPage(); // Render halaman Teman
+      default:
+        return _buildOtherTab();
+    }
   }
 
   Widget _buildOtherTab() {
