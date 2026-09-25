@@ -5,8 +5,8 @@ import '../widgets/create_post_box.dart';
 import '../widgets/stories_row.dart';
 import '../widgets/post_card.dart';
 import '../widgets/fb_bottom_nav.dart';
-import '../widgets/reels_page.dart'; // Import dari kode teman
-import 'friends_page.dart'; // Import dari kode aslimu
+import '../widgets/reels_page.dart';
+import 'friends_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -70,10 +70,6 @@ class _HomePageState extends State<HomePage> {
 
   String _tabTitle(int index) {
     switch (index) {
-      case 1:
-        return 'Video';
-      case 2:
-        return 'Teman';
       case 3:
         return 'Notifikasi';
       case 4:
@@ -86,7 +82,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar disembunyikan (null) jika index == 1 (Halaman Reels)
       appBar: _currentIndex == 1 ? null : const FbAppBar(),
       body: _buildBody(),
       bottomNavigationBar: FbBottomNav(
@@ -97,22 +92,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody() {
-    switch (_currentIndex) {
-      case 0:
-        return _buildFeed();
-      case 1:
-        return const ReelsPage(); // Render halaman Video/Reels
-      case 2:
-        return const FriendsPage(); // Render halaman Teman
-      default:
-        return _buildOtherTab();
-    }
+    return IndexedStack(
+      index: _currentIndex,
+      children: [
+        _buildFeed(),
+        const ReelsPage(),
+        const FriendsPage(),
+        _buildOtherTab(3),
+        _buildOtherTab(4),
+      ],
+    );
   }
 
-  Widget _buildOtherTab() {
+  Widget _buildOtherTab(int index) {
     return Center(
       child: Text(
-        'Halaman ${_tabTitle(_currentIndex)}',
+        'Halaman ${_tabTitle(index)}',
         style: const TextStyle(fontSize: 18, color: Colors.grey),
       ),
     );

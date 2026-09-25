@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-/// Dummy account that can post reels.
 class ReelUser {
   final String name;
   final String username;
@@ -14,7 +13,6 @@ class ReelUser {
   });
 }
 
-/// Dummy accounts already "posting" reels in the feed below.
 const List<ReelUser> dummyReelUsers = [
   ReelUser(name: 'Richard', username: '@richardo'),
   ReelUser(name: 'Elysia', username: '@elysia.k'),
@@ -22,11 +20,24 @@ const List<ReelUser> dummyReelUsers = [
   ReelUser(name: 'Surya', username: '@suryabs'),
 ];
 
-/// Simple data model for a single reel item.
-/// By default [videoUrl] points to a real (public stock/sample) video
-/// played with the `video_player` package. Set [isAsset] to true and
-/// pass the bundled asset path instead (e.g. `assets/videos/f1_race.mp4`)
-/// to play a local video file bundled with the app.
+const ReelUser currentUser = ReelUser(name: 'Kamu', username: '@kamu');
+
+class ReelComment {
+  final ReelUser author;
+  final String text;
+  int likeCount;
+  bool isLiked;
+  List<ReelComment> replies;
+
+  ReelComment({
+    required this.author,
+    required this.text,
+    this.likeCount = 0,
+    this.isLiked = false,
+    List<ReelComment>? replies,
+  }) : replies = replies ?? [];
+}
+
 class Reel {
   final ReelUser user;
   final String videoUrl;
@@ -34,7 +45,7 @@ class Reel {
   final String caption;
   int likeCount;
   bool isLiked;
-  int commentCount;
+  List<ReelComment> comments;
 
   Reel({
     required this.user,
@@ -43,8 +54,8 @@ class Reel {
     required this.caption,
     this.likeCount = 0,
     this.isLiked = false,
-    this.commentCount = 0,
-  });
+    List<ReelComment>? comments,
+  }) : comments = comments ?? [];
 }
 
 class ReelsPage extends StatefulWidget {
@@ -65,7 +76,10 @@ class _ReelsPageState extends State<ReelsPage> {
       isAsset: true,
       caption: 'Ngebut ala F1, jantung deg-degan 🏎️🔥',
       likeCount: 88,
-      commentCount: 7,
+      comments: [
+        ReelComment(author: dummyReelUsers[2], text: 'Gilaa ngebut banget', likeCount: 3),
+        ReelComment(author: dummyReelUsers[1], text: 'Pengen nyoba juga'),
+      ],
     ),
     Reel(
       user: dummyReelUsers[1], // Elysia
@@ -73,7 +87,19 @@ class _ReelsPageState extends State<ReelsPage> {
       isAsset: true,
       caption: 'Chiiikawa lucu banget, gemesin 🐰',
       likeCount: 231,
-      commentCount: 34,
+      comments: [
+        ReelComment(
+          author: dummyReelUsers[3],
+          text: 'Gemesin bangettt',
+          likeCount: 5,
+          replies: [
+            ReelComment(author: dummyReelUsers[0], text: 'Iya lucu parah 😭'),
+          ],
+        ),
+        ReelComment(author: dummyReelUsers[0], text: 'Aku juga suka Chiikawa'),
+        ReelComment(author: dummyReelUsers[2], text: 'Lucu ihh'),
+        ReelComment(author: dummyReelUsers[3], text: 'Mana bisa kuat liat ini'),
+      ],
     ),
     Reel(
       user: dummyReelUsers[2], // Andrian
@@ -81,7 +107,16 @@ class _ReelsPageState extends State<ReelsPage> {
       isAsset: true,
       caption: 'Relatable',
       likeCount: 59,
-      commentCount: 5,
+      comments: [
+        ReelComment(
+          author: dummyReelUsers[3],
+          text: 'Wkwkwk relate banget',
+          likeCount: 2,
+          replies: [
+            ReelComment(author: dummyReelUsers[1], text: 'hahahhha'),
+          ],
+        ),
+      ],
     ),
     Reel(
       user: dummyReelUsers[3], // Surya
@@ -89,7 +124,12 @@ class _ReelsPageState extends State<ReelsPage> {
       isAsset: true,
       caption: 'Makan hotpot bareng keluarga, hangat banget 🍲',
       likeCount: 312,
-      commentCount: 40,
+      comments: [
+        ReelComment(author: dummyReelUsers[0], text: 'Jadi laper'),
+        ReelComment(author: dummyReelUsers[1], text: 'Enak banget kayaknya', likeCount: 4),
+        ReelComment(author: dummyReelUsers[2], text: 'Ajak-ajak dong'),
+        ReelComment(author: dummyReelUsers[0], text: 'Hotpot emang the best'),
+      ],
     ),
     Reel(
       user: dummyReelUsers[0], // Richard again
@@ -97,7 +137,11 @@ class _ReelsPageState extends State<ReelsPage> {
       isAsset: true,
       caption: 'Japan is turning footsteps into electricity! ⚡ Using piezoelectric tiles, every step you take generates a small amount of energy. Millions of steps together can power LED lights and displays in busy places like Shibuya Station. A brilliant way to create a sustainable and smart city! #Japan #RenewableEnergy #SmartCity #Innovation',
       likeCount: 145,
-      commentCount: 19,
+      comments: [
+        ReelComment(author: dummyReelUsers[2], text: 'Keren banget teknologinya', likeCount: 6),
+        ReelComment(author: dummyReelUsers[1], text: 'Wah baru tau'),
+        ReelComment(author: dummyReelUsers[3], text: 'Indonesia kapan nih'),
+      ],
     ),
     Reel(
       user: dummyReelUsers[1], // Elysia again
@@ -105,7 +149,10 @@ class _ReelsPageState extends State<ReelsPage> {
       isAsset: true,
       caption: 'Blablablablabla',
       likeCount: 176,
-      commentCount: 22,
+      comments: [
+        ReelComment(author: dummyReelUsers[0], text: 'Wkwkwk'),
+        ReelComment(author: dummyReelUsers[2], text: 'Ngakak liat ini'),
+      ],
     ),
     Reel(
       user: dummyReelUsers[2], // Andrian again
@@ -113,7 +160,9 @@ class _ReelsPageState extends State<ReelsPage> {
       isAsset: true,
       caption: 'This so ass',
       likeCount: 102,
-      commentCount: 11,
+      comments: [
+        ReelComment(author: dummyReelUsers[3], text: 'LMAO'),
+      ],
     ),
     Reel(
       user: dummyReelUsers[3], // Surya again
@@ -121,7 +170,10 @@ class _ReelsPageState extends State<ReelsPage> {
       isAsset: true,
       caption: ' commuting to work, same old same old',
       likeCount: 97,
-      commentCount: 8,
+      comments: [
+        ReelComment(author: dummyReelUsers[1], text: 'Semangat kerjanya'),
+        ReelComment(author: dummyReelUsers[0], text: 'Same here bro'),
+      ],
     ),
   ];
 
@@ -235,6 +287,27 @@ class _ReelItemState extends State<_ReelItem> {
     });
   }
 
+  int get _totalCommentCount {
+    return widget.reel.comments.fold<int>(
+      0,
+      (sum, c) => sum + 1 + c.replies.length,
+    );
+  }
+
+  void _showCommentSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => _ReelCommentSheet(
+        reel: widget.reel,
+        onChanged: () => setState(() {}),
+      ),
+    ).then((_) => setState(() {}));
+  }
+
   Widget _sideAction({
     required IconData icon,
     required String label,
@@ -273,7 +346,7 @@ class _ReelItemState extends State<_ReelItem> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Video, cropped to fill the screen like a real reels feed.
+
           if (initialized)
             FittedBox(
               fit: BoxFit.cover,
@@ -310,7 +383,6 @@ class _ReelItemState extends State<_ReelItem> {
               ),
             ),
 
-          // Darken bottom for text legibility
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -322,7 +394,6 @@ class _ReelItemState extends State<_ReelItem> {
             ),
           ),
 
-          // Pause indicator (shown only while paused)
           if (initialized && !_controller.value.isPlaying)
             const Center(
               child: Icon(
@@ -332,7 +403,6 @@ class _ReelItemState extends State<_ReelItem> {
               ),
             ),
 
-          // Mute/unmute toggle
           Positioned(
             top: 12,
             right: 12,
@@ -350,7 +420,6 @@ class _ReelItemState extends State<_ReelItem> {
             ),
           ),
 
-          // Bottom-left: user info + caption
           Positioned(
             left: 12,
             right: 80,
@@ -402,7 +471,6 @@ class _ReelItemState extends State<_ReelItem> {
             ),
           ),
 
-          // Right side: like / comment / share
           Positioned(
             right: 8,
             bottom: 24,
@@ -417,8 +485,8 @@ class _ReelItemState extends State<_ReelItem> {
                 ),
                 _sideAction(
                   icon: Icons.comment,
-                  label: '${reel.commentCount}',
-                  onTap: () {},
+                  label: '$_totalCommentCount',
+                  onTap: () => _showCommentSheet(context),
                 ),
                 _sideAction(
                   icon: Icons.share,
@@ -429,6 +497,231 @@ class _ReelItemState extends State<_ReelItem> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ReelCommentSheet extends StatefulWidget {
+  final Reel reel;
+  final VoidCallback onChanged;
+
+  const _ReelCommentSheet({
+    required this.reel,
+    required this.onChanged,
+  });
+
+  @override
+  State<_ReelCommentSheet> createState() => _ReelCommentSheetState();
+}
+
+class _ReelCommentSheetState extends State<_ReelCommentSheet> {
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  ReelComment? _replyTarget;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+    setState(() {
+      if (_replyTarget != null) {
+        _replyTarget!.replies.add(ReelComment(author: currentUser, text: text));
+      } else {
+        widget.reel.comments.add(ReelComment(author: currentUser, text: text));
+      }
+      _replyTarget = null;
+    });
+    _controller.clear();
+    widget.onChanged();
+  }
+
+  void _startReply(ReelComment comment) {
+    setState(() {
+      _replyTarget = comment;
+      _controller.text = '${comment.author.username} ';
+      _controller.selection = TextSelection.collapsed(offset: _controller.text.length);
+    });
+    _focusNode.requestFocus();
+  }
+
+  void _cancelReply() {
+    setState(() {
+      _replyTarget = null;
+      _controller.clear();
+    });
+  }
+
+  void _toggleCommentLike(ReelComment comment) {
+    setState(() {
+      comment.isLiked = !comment.isLiked;
+      comment.likeCount += comment.isLiked ? 1 : -1;
+    });
+  }
+
+  Widget _commentTile(ReelComment comment, {required ReelComment replyTarget, bool isReply = false}) {
+    return Padding(
+      padding: EdgeInsets.only(left: isReply ? 40 : 0, right: 12, top: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: isReply ? 14 : 16,
+            backgroundColor: const Color(0xFF1877F2),
+            child: Icon(Icons.person, size: isReply ? 14 : 16, color: Colors.white),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(color: Colors.black, fontSize: 13),
+                    children: [
+                      TextSpan(
+                        text: comment.author.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: '  ${comment.author.username}',
+                        style: const TextStyle(color: Colors.grey, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(comment.text, style: const TextStyle(fontSize: 13)),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _toggleCommentLike(comment),
+                      child: Row(
+                        children: [
+                          Icon(
+                            comment.isLiked ? Icons.favorite : Icons.favorite_border,
+                            size: 15,
+                            color: comment.isLiked ? const Color(0xFF1877F2) : Colors.grey,
+                          ),
+                          if (comment.likeCount > 0) ...[
+                            const SizedBox(width: 3),
+                            Text(
+                              '${comment.likeCount}',
+                              style: const TextStyle(fontSize: 11, color: Colors.grey),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    GestureDetector(
+                      onTap: () => _startReply(replyTarget),
+                      child: const Text(
+                        'Balas',
+                        style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: SizedBox(
+        height: 480,
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text('Komentar', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: widget.reel.comments.isEmpty
+                  ? const Center(child: Text('Belum ada komentar', style: TextStyle(color: Colors.grey)))
+                  : ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      itemCount: widget.reel.comments.length,
+                      itemBuilder: (context, index) {
+                        final comment = widget.reel.comments[index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _commentTile(comment, replyTarget: comment),
+                            for (final reply in comment.replies)
+                              _commentTile(reply, replyTarget: comment, isReply: true),
+                          ],
+                        );
+                      },
+                    ),
+            ),
+            const Divider(height: 1),
+            if (_replyTarget != null)
+              Container(
+                width: double.infinity,
+                color: const Color(0xFFF0F2F5),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Membalas ke ${_replyTarget!.author.username}',
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: _cancelReply,
+                      child: const Icon(Icons.close, size: 16, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  const CircleAvatar(radius: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      decoration: InputDecoration(
+                        hintText: _replyTarget == null ? 'Tulis komentar...' : 'Tulis balasan...',
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFF0F2F5),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.send, color: Color(0xFF1877F2)),
+                    onPressed: _submit,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
