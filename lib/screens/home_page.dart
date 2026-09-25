@@ -7,6 +7,7 @@ import '../widgets/post_card.dart';
 import '../widgets/fb_bottom_nav.dart';
 import '../widgets/reels_page.dart';
 import 'friends_page.dart';
+import 'marketplace_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -70,9 +71,9 @@ class _HomePageState extends State<HomePage> {
 
   String _tabTitle(int index) {
     switch (index) {
-      case 3:
-        return 'Notifikasi';
       case 4:
+        return 'Notifikasi';
+      case 5:
         return 'Menu';
       default:
         return 'Beranda';
@@ -82,7 +83,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _currentIndex == 1 ? null : const FbAppBar(),
+      appBar: (_currentIndex == 1 || _currentIndex == 2) ? null : const FbAppBar(),
       body: _buildBody(),
       bottomNavigationBar: FbBottomNav(
         currentIndex: _currentIndex,
@@ -97,9 +98,10 @@ class _HomePageState extends State<HomePage> {
       children: [
         _buildFeed(),
         const ReelsPage(),
+        const MarketplacePage(),
         const FriendsPage(),
-        _buildOtherTab(3),
         _buildOtherTab(4),
+        _buildOtherTab(5),
       ],
     );
   }

@@ -13,6 +13,7 @@ class FbBottomNav extends StatelessWidget {
   static const List<IconData> _icons = [
     Icons.home,
     Icons.ondemand_video,
+    Icons.storefront,
     Icons.group,
     Icons.notifications,
     Icons.menu,
