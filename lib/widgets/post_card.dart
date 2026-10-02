@@ -64,7 +64,21 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                CircleAvatar(backgroundImage: NetworkImage(post.avatarUrl)),
+                CircleAvatar(
+                  backgroundColor: Colors.grey[300],
+                  child: post.avatarUrl.isEmpty
+                      ? const Icon(Icons.person, color: Colors.white)
+                      : ClipOval(
+                          child: Image.network(
+                            post.avatarUrl,
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.person, color: Colors.white),
+                          ),
+                        ),
+                ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
@@ -84,8 +98,13 @@ class PostCard extends StatelessWidget {
             child: Text(post.content),
           ),
           const SizedBox(height: 8),
-          if (post.imageUrl != null)
-            Image.network(post.imageUrl!, width: double.infinity, fit: BoxFit.cover),
+          if (post.imageUrl != null && post.imageUrl!.isNotEmpty)
+            Image.network(
+              post.imageUrl!,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+            ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Text(

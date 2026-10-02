@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/app_notification.dart';
 import '../models/post.dart';
 import '../widgets/fb_app_bar.dart';
 import '../widgets/create_post_box.dart';
@@ -8,6 +9,7 @@ import '../widgets/fb_bottom_nav.dart';
 import '../widgets/reels_page.dart';
 import 'friends_page.dart';
 import 'marketplace_page.dart';
+import 'notification_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,6 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  late final List<GlobalKey> _postKeys =
+      List.generate(_posts.length, (_) => GlobalKey());
 
   final List<Post> _posts = [
     Post(
@@ -69,6 +73,31 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _handleNotificationTap(AppNotification notification) {
+    if (notification.type == NotifType.friend) {
+      setState(() => _currentIndex = 3);
+      return;
+    }
+
+    final postIndex = notification.targetPostIndex;
+    if (postIndex == null || postIndex < 0 || postIndex >= _posts.length) {
+      return;
+    }
+
+    setState(() => _currentIndex = 0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final postContext = _postKeys[postIndex].currentContext;
+      if (postContext != null) {
+        Scrollable.ensureVisible(
+          postContext,
+          duration: const Duration(milliseconds: 450),
+          curve: Curves.easeInOut,
+          alignment: 0.05,
+        );
+      }
+    });
+  }
+
   String _tabTitle(int index) {
     switch (index) {
       case 4:
@@ -100,7 +129,7 @@ class _HomePageState extends State<HomePage> {
         const ReelsPage(),
         const MarketplacePage(),
         const FriendsPage(),
-        _buildOtherTab(4),
+        NotificationPage(onNotificationTap: _handleNotificationTap),
         _buildOtherTab(5),
       ],
     );
@@ -122,11 +151,12 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(height: 6),
         const StoriesRow(),
         const SizedBox(height: 6),
-        for (final post in _posts)
+        for (var i = 0; i < _posts.length; i++)
           PostCard(
-            post: post,
-            onToggleLike: () => _toggleLike(post),
-            onAddComment: (comment) => _addComment(post, comment),
+            key: _postKeys[i],
+            post: _posts[i],
+            onToggleLike: () => _toggleLike(_posts[i]),
+            onAddComment: (comment) => _addComment(_posts[i], comment),
           ),
       ],
     );
