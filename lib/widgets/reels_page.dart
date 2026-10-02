@@ -59,123 +59,20 @@ class Reel {
 }
 
 class ReelsPage extends StatefulWidget {
-  const ReelsPage({super.key});
+  final int initialIndex;
+
+  const ReelsPage({super.key, this.initialIndex = 0});
 
   @override
   State<ReelsPage> createState() => _ReelsPageState();
 }
 
 class _ReelsPageState extends State<ReelsPage> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
+  late final PageController _pageController =
+      PageController(initialPage: widget.initialIndex);
+  late int _currentPage = widget.initialIndex;
 
-  late final List<Reel> _reels = [
-    Reel(
-      user: dummyReelUsers[0], // Richard
-      videoUrl: 'assets/videos/f1_race.mp4',
-      isAsset: true,
-      caption: 'Ngebut ala F1, jantung deg-degan 🏎️🔥',
-      likeCount: 88,
-      comments: [
-        ReelComment(author: dummyReelUsers[2], text: 'Gilaa ngebut banget', likeCount: 3),
-        ReelComment(author: dummyReelUsers[1], text: 'Pengen nyoba juga'),
-      ],
-    ),
-    Reel(
-      user: dummyReelUsers[1], // Elysia
-      videoUrl: 'assets/videos/Chiikawa.mp4',
-      isAsset: true,
-      caption: 'Chiiikawa lucu banget, gemesin 🐰',
-      likeCount: 231,
-      comments: [
-        ReelComment(
-          author: dummyReelUsers[3],
-          text: 'Gemesin bangettt',
-          likeCount: 5,
-          replies: [
-            ReelComment(author: dummyReelUsers[0], text: 'Iya lucu parah 😭'),
-          ],
-        ),
-        ReelComment(author: dummyReelUsers[0], text: 'Aku juga suka Chiikawa'),
-        ReelComment(author: dummyReelUsers[2], text: 'Lucu ihh'),
-        ReelComment(author: dummyReelUsers[3], text: 'Mana bisa kuat liat ini'),
-      ],
-    ),
-    Reel(
-      user: dummyReelUsers[2], // Andrian
-      videoUrl: 'assets/videos/Dog.mp4',
-      isAsset: true,
-      caption: 'Relatable',
-      likeCount: 59,
-      comments: [
-        ReelComment(
-          author: dummyReelUsers[3],
-          text: 'Wkwkwk relate banget',
-          likeCount: 2,
-          replies: [
-            ReelComment(author: dummyReelUsers[1], text: 'hahahhha'),
-          ],
-        ),
-      ],
-    ),
-    Reel(
-      user: dummyReelUsers[3], // Surya
-      videoUrl: 'assets/videos/Hotpot.mp4',
-      isAsset: true,
-      caption: 'Makan hotpot bareng keluarga, hangat banget 🍲',
-      likeCount: 312,
-      comments: [
-        ReelComment(author: dummyReelUsers[0], text: 'Jadi laper'),
-        ReelComment(author: dummyReelUsers[1], text: 'Enak banget kayaknya', likeCount: 4),
-        ReelComment(author: dummyReelUsers[2], text: 'Ajak-ajak dong'),
-        ReelComment(author: dummyReelUsers[0], text: 'Hotpot emang the best'),
-      ],
-    ),
-    Reel(
-      user: dummyReelUsers[0], // Richard again
-      videoUrl: 'assets/videos/Speed.mp4',
-      isAsset: true,
-      caption: 'Japan is turning footsteps into electricity! ⚡ Using piezoelectric tiles, every step you take generates a small amount of energy. Millions of steps together can power LED lights and displays in busy places like Shibuya Station. A brilliant way to create a sustainable and smart city! #Japan #RenewableEnergy #SmartCity #Innovation',
-      likeCount: 145,
-      comments: [
-        ReelComment(author: dummyReelUsers[2], text: 'Keren banget teknologinya', likeCount: 6),
-        ReelComment(author: dummyReelUsers[1], text: 'Wah baru tau'),
-        ReelComment(author: dummyReelUsers[3], text: 'Indonesia kapan nih'),
-      ],
-    ),
-    Reel(
-      user: dummyReelUsers[1], // Elysia again
-      videoUrl: 'assets/videos/Hamster.mp4',
-      isAsset: true,
-      caption: 'Blablablablabla',
-      likeCount: 176,
-      comments: [
-        ReelComment(author: dummyReelUsers[0], text: 'Wkwkwk'),
-        ReelComment(author: dummyReelUsers[2], text: 'Ngakak liat ini'),
-      ],
-    ),
-    Reel(
-      user: dummyReelUsers[2], // Andrian again
-      videoUrl: 'assets/videos/Bed.mp4',
-      isAsset: true,
-      caption: 'This so ass',
-      likeCount: 102,
-      comments: [
-        ReelComment(author: dummyReelUsers[3], text: 'LMAO'),
-      ],
-    ),
-    Reel(
-      user: dummyReelUsers[3], // Surya again
-      videoUrl: 'assets/videos/Train.mp4',
-      isAsset: true,
-      caption: ' commuting to work, same old same old',
-      likeCount: 97,
-      comments: [
-        ReelComment(author: dummyReelUsers[1], text: 'Semangat kerjanya'),
-        ReelComment(author: dummyReelUsers[0], text: 'Same here bro'),
-      ],
-    ),
-  ];
+  final List<Reel> _reels = dummyReels;
 
   @override
   void dispose() {
@@ -212,6 +109,114 @@ class _ReelsPageState extends State<ReelsPage> {
   }
 }
 
+final List<Reel> dummyReels = [
+    Reel(
+      user: dummyReelUsers[0],
+      videoUrl: 'assets/videos/f1_race.mp4',
+      isAsset: true,
+      caption: 'Ngebut ala F1, jantung deg-degan 🏎️🔥',
+      likeCount: 88,
+      comments: [
+        ReelComment(author: dummyReelUsers[2], text: 'Gilaa ngebut banget', likeCount: 3),
+        ReelComment(author: dummyReelUsers[1], text: 'Pengen nyoba juga'),
+      ],
+    ),
+    Reel(
+      user: dummyReelUsers[1],
+      videoUrl: 'assets/videos/Chiikawa.mp4',
+      isAsset: true,
+      caption: 'Chiiikawa lucu banget, gemesin 🐰',
+      likeCount: 231,
+      comments: [
+        ReelComment(
+          author: dummyReelUsers[3],
+          text: 'Gemesin bangettt',
+          likeCount: 5,
+          replies: [
+            ReelComment(author: dummyReelUsers[0], text: 'Iya lucu parah 😭'),
+          ],
+        ),
+        ReelComment(author: dummyReelUsers[0], text: 'Aku juga suka Chiikawa'),
+        ReelComment(author: dummyReelUsers[2], text: 'Lucu ihh'),
+        ReelComment(author: dummyReelUsers[3], text: 'Mana bisa kuat liat ini'),
+      ],
+    ),
+    Reel(
+      user: dummyReelUsers[2],
+      videoUrl: 'assets/videos/Dog.mp4',
+      isAsset: true,
+      caption: 'Relatable',
+      likeCount: 59,
+      comments: [
+        ReelComment(
+          author: dummyReelUsers[3],
+          text: 'Wkwkwk relate banget',
+          likeCount: 2,
+          replies: [
+            ReelComment(author: dummyReelUsers[1], text: 'hahahhha'),
+          ],
+        ),
+      ],
+    ),
+    Reel(
+      user: dummyReelUsers[3],
+      videoUrl: 'assets/videos/Hotpot.mp4',
+      isAsset: true,
+      caption: 'Makan hotpot bareng keluarga, hangat banget 🍲',
+      likeCount: 312,
+      comments: [
+        ReelComment(author: dummyReelUsers[0], text: 'Jadi laper'),
+        ReelComment(author: dummyReelUsers[1], text: 'Enak banget kayaknya', likeCount: 4),
+        ReelComment(author: dummyReelUsers[2], text: 'Ajak-ajak dong'),
+        ReelComment(author: dummyReelUsers[0], text: 'Hotpot emang the best'),
+      ],
+    ),
+    Reel(
+      user: dummyReelUsers[0],
+      videoUrl: 'assets/videos/Speed.mp4',
+      isAsset: true,
+      caption: 'Japan is turning footsteps into electricity! ⚡ Using piezoelectric tiles, every step you take generates a small amount of energy. Millions of steps together can power LED lights and displays in busy places like Shibuya Station. A brilliant way to create a sustainable and smart city! #Japan #RenewableEnergy #SmartCity #Innovation',
+      likeCount: 145,
+      comments: [
+        ReelComment(author: dummyReelUsers[2], text: 'Keren banget teknologinya', likeCount: 6),
+        ReelComment(author: dummyReelUsers[1], text: 'Wah baru tau'),
+        ReelComment(author: dummyReelUsers[3], text: 'Indonesia kapan nih'),
+      ],
+    ),
+    Reel(
+      user: dummyReelUsers[1],
+      videoUrl: 'assets/videos/Hamster.mp4',
+      isAsset: true,
+      caption: 'Blablablablabla',
+      likeCount: 176,
+      comments: [
+        ReelComment(author: dummyReelUsers[0], text: 'Wkwkwk'),
+        ReelComment(author: dummyReelUsers[2], text: 'Ngakak liat ini'),
+      ],
+    ),
+    Reel(
+      user: dummyReelUsers[2],
+      videoUrl: 'assets/videos/Bed.mp4',
+      isAsset: true,
+      caption: 'This so ass',
+      likeCount: 102,
+      comments: [
+        ReelComment(author: dummyReelUsers[3], text: 'LMAO'),
+      ],
+    ),
+    Reel(
+      user: dummyReelUsers[3],
+      videoUrl: 'assets/videos/Train.mp4',
+      isAsset: true,
+      caption: ' commuting to work, same old same old',
+      likeCount: 97,
+      comments: [
+        ReelComment(author: dummyReelUsers[1], text: 'Semangat kerjanya'),
+        ReelComment(author: dummyReelUsers[0], text: 'Same here bro'),
+      ],
+    ),
+  ];
+
 class _ReelItem extends StatefulWidget {
   final Reel reel;
   final bool isActive;
@@ -247,8 +252,6 @@ class _ReelItemState extends State<_ReelItem> {
         setState(() {});
         if (widget.isActive) _controller.play();
       }).catchError((Object e) {
-        // Surface load failures (e.g. asset not bundled, bad URL) instead
-        // of leaving the spinner running forever.
         debugPrint('Reel video failed to load: ${widget.reel.videoUrl} -> $e');
         if (!mounted) return;
         setState(() => _error = e.toString());
