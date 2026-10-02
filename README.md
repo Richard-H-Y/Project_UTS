@@ -5,7 +5,7 @@
 - 535250056 Elysia Nyoman | stories row, comment sheet
 - 535250057 Andrian Hartono | Notifications, post card, app bar
 - 535250058 Richard Harris Yuwono | Login menu, marketplace (including cart), friend suggestions & request
-- Surya Banyutama Suprapto | Reels page, friends, bottom navigation, post box, message feature in reels
+- 535250100 Surya Banyutama Suprapto | Reels page, friends, bottom navigation, post box, message feature in reels
 
 ## Fitur yang Sudah Dikerjakan
 
