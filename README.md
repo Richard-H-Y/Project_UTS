@@ -24,16 +24,6 @@
 - **shared_preferences**, menyimpan status login secara lokal
 - Widget bawaan Flutter: `StatelessWidget`, `StatefulWidget`, `ListView`, `GridView.builder`, `Navigator`
 
-## Struktur Folder
-
-'''
-lib/
-|--- main.dart
-|--- models/ # struktur data (Post, Friend, MarketplaceItem, dll)
-|--- screens/ # setiap halaman utama aplikasi
-|--- widgets/ # komponen UI yang dapat dipakai ulang
-'''
-
 ## Cara Login
 
 - Login menggunakan akun demo: **username** `student`, **password** `123456`.
