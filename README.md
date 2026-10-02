@@ -26,11 +26,13 @@
 
 ## Struktur Folder
 
+'''
 lib/
 |--- main.dart
 |--- models/ # struktur data (Post, Friend, MarketplaceItem, dll)
 |--- screens/ # setiap halaman utama aplikasi
 |--- widgets/ # komponen UI yang dapat dipakai ulang
+'''
 
 ## Cara Login
 
