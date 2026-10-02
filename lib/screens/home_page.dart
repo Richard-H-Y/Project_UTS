@@ -10,6 +10,7 @@ import '../widgets/reels_page.dart';
 import 'friends_page.dart';
 import 'marketplace_page.dart';
 import 'notification_page.dart';
+import 'menu_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -98,17 +99,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  String _tabTitle(int index) {
-    switch (index) {
-      case 4:
-        return 'Notifikasi';
-      case 5:
-        return 'Menu';
-      default:
-        return 'Beranda';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,17 +120,8 @@ class _HomePageState extends State<HomePage> {
         const MarketplacePage(),
         const FriendsPage(),
         NotificationPage(onNotificationTap: _handleNotificationTap),
-        _buildOtherTab(5),
+        const MenuPage(),
       ],
-    );
-  }
-
-  Widget _buildOtherTab(int index) {
-    return Center(
-      child: Text(
-        'Halaman ${_tabTitle(index)}',
-        style: const TextStyle(fontSize: 18, color: Colors.grey),
-      ),
     );
   }
 

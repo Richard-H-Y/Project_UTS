@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_page.dart';
+import 'screens/login_page.dart';
 
 void main() {
   runApp(const FacebookCloneApp());
@@ -18,7 +18,7 @@ class FacebookCloneApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFF0F2F5),
         fontFamily: 'Roboto',
       ),
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }

@@ -1,17 +1,37 @@
-# project_flutter
+# Project Facebook
 
-A new Flutter project.
+## Anggota Kelompok
 
-## Getting Started
+- 535250056 Elysia Nyoman | stories row, comment sheet
+- 535250057 Andrian Hartono | Notifications, post card, app bar
+- 535250058 Richard Harris Yuwono | Login menu, marketplace (including cart), friend suggestions & request
+- Surya Banyutama Suprapto | Reels page, friends, bottom navigation, post box, message feature in reels
 
-This project is a starting point for a Flutter application.
+## Fitur yang Sudah Dikerjakan
 
-A few resources to get you started if this is your first Flutter project:
+- **Login**, autentikasi sederhana dengan `shared_preferences` (status login tersimpan walaupun app ditutup)
+- **News Feed**, lihat postingan, like, dan komentar
+- **Stories**, baris stories horizontal di bagian atas feed
+- **Reels**, video pendek yang bisa di-scroll
+- **Marketplace**, daftar barang, detail barang, tambah ke keranjang, dan checkout
+- **Friends**, konfirmasi/hapus permintaan pertemanan, serta saran pertemanan
+- **Chat**, percakapan sederhana antar pengguna
+- **Notifications**, daftar notifikasi dengan filter
+- **Menu & Logout**, profil pengguna dan keluar dari akun
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Teknologi yang Digunakan
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **shared_preferences**, menyimpan status login secara lokal
+- Widget bawaan Flutter: `StatelessWidget`, `StatefulWidget`, `ListView`, `GridView.builder`, `Navigator`
+
+## Struktur Folder
+
+lib/
+|--- main.dart
+|--- models/ # struktur data (Post, Friend, MarketplaceItem, dll)
+|--- screens/ # setiap halaman utama aplikasi
+|--- widgets/ # komponen UI yang dapat dipakai ulang
+
+## Cara Login
+
+- Login menggunakan akun demo: **username** `student`, **password** `123456`.

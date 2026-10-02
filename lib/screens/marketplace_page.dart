@@ -17,37 +17,37 @@ class _MarketplacePageState extends State<MarketplacePage> {
       title: 'Sepeda Gunung Bekas',
       price: 'Rp 1.500.000',
       location: 'Jakarta Barat',
-      imageUrl: 'https://picsum.photos/seed/sepeda/400/400',
+      imageUrl: 'https://png.pngtree.com/png-clipart/20250416/original/pngtree-red-mountain-bike-png-image_20702371.png',
       seller: 'Richard',
       category: 'Olahraga',
       description:
-          'Sepeda gunung kondisi 90%, jarang dipakai. Rem dan gear masih normal. Nego halus, COD area Jakarta Barat.',
+          'Sepeda gunung kondisi 90%, jarang dipakai. Rem dan gear masih normal.',
     ),
     MarketplaceItem(
       title: 'Meja Belajar Kayu',
       price: 'Rp 350.000',
       location: 'Tangerang',
-      imageUrl: 'https://picsum.photos/seed/meja/400/400',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ9cC9iGfjChI7Q_XwF4Jpo1cm1T8RRyyorlom2oa1OqaqIPZbSSPODs4&s=10',
       seller: 'Elysia',
       category: 'Furnitur',
       description:
-          'Meja belajar kayu solid, ukuran 100x50cm. Cocok untuk kerja/belajar dari rumah. Kondisi mulus, tanpa cacat.',
+          'Meja belajar kayu solid. Cocok untuk kerja/belajar dari rumah. Kondisi mulus, tanpa cacat.',
     ),
     MarketplaceItem(
       title: 'Kamera Analog',
       price: 'Rp 800.000',
       location: 'Jakarta Selatan',
-      imageUrl: 'https://picsum.photos/seed/kamera/400/400',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzqv3OIzqldYt4iYHbCG3jyBT9r_xx1ic31_iGRLYnZi2UVXWaTKXn30I&s=10',
       seller: 'Andrian',
       category: 'Elektronik',
       description:
-          'Kamera analog vintage, masih bisa dipakai normal. Lengkap dengan tali dan lens cap. Cocok buat koleksi atau hobi fotografi film.',
+          'Kamera analog vintage, masih bisa dipakai normal.',
     ),
     MarketplaceItem(
       title: 'Sepatu Lari Ukuran 42',
       price: 'Rp 250.000',
       location: 'Jakarta Utara',
-      imageUrl: 'https://picsum.photos/seed/sepatu/400/400',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMq48k4sdGMxGBEFDiVTuuR8EvOp_3bH8aU9eo5ODuM5rOgS8dR57pkTm6&s=10',
       seller: 'Surya',
       category: 'Fashion',
       description:
@@ -57,21 +57,21 @@ class _MarketplacePageState extends State<MarketplacePage> {
       title: 'Rak Buku Minimalis',
       price: 'Rp 275.000',
       location: 'Bekasi',
-      imageUrl: 'https://picsum.photos/seed/rakbuku/400/400',
-      seller: 'Clara',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdHBnB4j6CoP2UwPFou7ljIcg1t7CtVxC8Havd6Qyn0A1nfIrk9I37C1U&s=100',
+      seller: 'Kevin',
       category: 'Furnitur',
       description:
-          'Rak buku minimalis 3 tingkat, bahan kayu MDF. Ringan dan mudah dipindah, cocok untuk kamar kos atau apartemen.',
+          'Rak buku minimalis. Ringan dan mudah dipindah, cocok untuk kamar kos atau apartemen.',
     ),
     MarketplaceItem(
       title: 'Keyboard Mechanical',
       price: 'Rp 450.000',
       location: 'Jakarta Barat',
-      imageUrl: 'https://picsum.photos/seed/keyboard/400/400',
-      seller: 'Fajar',
+      imageUrl: 'https://kbdfans.com/cdn/shop/files/JUN_5926.jpg?v=1789521139&width=1400',
+      seller: 'Cathrine',
       category: 'Elektronik',
       description:
-          'Keyboard mechanical switch blue, RGB backlight. Cocok untuk gaming atau kerja. Kondisi masih sangat baik.',
+          'Keyboard mechanical. Cocok untuk gaming atau kerja. Kondisi masih sangat baik.',
     ),
   ];
 
