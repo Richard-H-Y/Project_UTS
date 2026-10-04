@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_page.dart';
@@ -20,6 +24,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   String _displayName = '';
   String _email = '';
   String _phone = '';
+  String _bio = '';
+  String _photoPath = '';
   bool _notifOn = true;
   bool _privateOn = false;
 
@@ -34,6 +40,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     final displayName = await _prefs.getString('display_name') ?? '';
     final email = await _prefs.getString('email') ?? '';
     final phone = await _prefs.getString('phone') ?? '';
+    final bio = await _prefs.getString('bio') ?? '';
+    final photoPath = await _prefs.getString('profile_picture') ?? '';
     final notifOn = await _prefs.getBool('notif_on') ?? true;
     final privateOn = await _prefs.getBool('private_on') ?? false;
     if (!mounted) return;
@@ -42,6 +50,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       _displayName = displayName;
       _email = email;
       _phone = phone;
+      _bio = bio;
+      _photoPath = photoPath;
       _notifOn = notifOn;
       _privateOn = privateOn;
       _isLoading = false;
@@ -50,6 +60,144 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   void _showSnack(String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  bool get _hasPhoto => _photoPath.isNotEmpty && File(_photoPath).existsSync();
+
+  Future<void> _pickPhoto(ImageSource source) async {
+    try {
+      final picked = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 85,
+      );
+      if (picked == null) return;
+
+      // Salin ke folder app supaya fotonya tidak hilang
+      final dir = await getApplicationDocumentsDirectory();
+      final newPath =
+          '${dir.path}/profile_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await File(picked.path).copy(newPath);
+
+      // Hapus foto lama
+      if (_hasPhoto) {
+        try {
+          await File(_photoPath).delete();
+        } catch (_) {}
+      }
+
+      await _prefs.setString('profile_picture', newPath);
+      if (!mounted) return;
+      setState(() => _photoPath = newPath);
+      _showSnack('Foto profil berhasil diganti');
+    } catch (e) {
+      if (!mounted) return;
+      _showSnack('Gagal mengambil foto');
+    }
+  }
+
+  Future<void> _removePhoto() async {
+    if (_hasPhoto) {
+      try {
+        await File(_photoPath).delete();
+      } catch (_) {}
+    }
+    await _prefs.remove('profile_picture');
+    if (!mounted) return;
+    setState(() => _photoPath = '');
+    _showSnack('Foto profil dihapus');
+  }
+
+  void _showPhotoOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Pilih dari galeri'),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                _pickPhoto(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_camera),
+              title: const Text('Ambil foto'),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                _pickPhoto(ImageSource.camera);
+              },
+            ),
+            if (_hasPhoto)
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: const Text('Hapus foto',
+                    style: TextStyle(color: Colors.red)),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _removePhoto();
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _photoHeader() {
+    final name = _displayName.isNotEmpty ? _displayName : _username;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: _showPhotoOptions,
+            child: Stack(
+              children: [
+                CircleAvatar(
+                  radius: 52,
+                  backgroundColor: const Color(0xFF1877F2),
+                  backgroundImage: _hasPhoto ? FileImage(File(_photoPath)) : null,
+                  child: _hasPhoto
+                      ? null
+                      : const Icon(Icons.person, color: Colors.white, size: 52),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: CircleAvatar(
+                    radius: 17,
+                    backgroundColor: const Color(0xFFE4E6EB),
+                    child: const Icon(Icons.camera_alt,
+                        size: 18, color: Colors.black87),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            name.isEmpty ? 'Pengguna' : name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          if (_bio.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+              child: Text(_bio,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.black54)),
+            ),
+        ],
+      ),
+    );
   }
 
   Future<void> _editField({
@@ -281,6 +429,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                _photoHeader(),
                 _section('Informasi Akun', [
                   ListTile(
                     leading: const Icon(Icons.account_circle,
@@ -299,6 +448,17 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                       onSaved: (v) => _displayName = v,
                       validator: (v) =>
                           v.isEmpty ? 'Nama tidak boleh kosong' : null,
+                    ),
+                  ),
+                  _infoTile(
+                    Icons.info,
+                    'Bio',
+                    _bio,
+                    () => _editField(
+                      title: 'Bio',
+                      currentValue: _bio,
+                      prefKey: 'bio',
+                      onSaved: (v) => _bio = v,
                     ),
                   ),
                   _infoTile(

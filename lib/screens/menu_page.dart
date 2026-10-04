@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +17,7 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
   String _username = '';
+  Uint8List? _photoBytes;
 
   @override
   void initState() {
@@ -24,9 +28,17 @@ class _MenuPageState extends State<MenuPage> {
   void _loadUsername() async {
     String displayName = await _prefs.getString('display_name') ?? '';
     String savedUsername = await _prefs.getString('username') ?? '';
+    String photoBase64 = await _prefs.getString('profile_picture') ?? '';
+    Uint8List? photoBytes;
+    if (photoBase64.isNotEmpty) {
+      try {
+        photoBytes = base64Decode(photoBase64);
+      } catch (_) {}
+    }
     if (!mounted) return;
     setState(() {
       _username = displayName.isNotEmpty ? displayName : savedUsername;
+      _photoBytes = photoBytes;
     });
   }
 
@@ -53,10 +65,19 @@ class _MenuPageState extends State<MenuPage> {
       padding: const EdgeInsets.all(16),
       children: [
         const SizedBox(height: 12),
-        const CircleAvatar(
-          radius: 36,
-          backgroundColor: Color(0xFF1877F2),
-          child: Icon(Icons.person, color: Colors.white, size: 36),
+        Center(
+          child: GestureDetector(
+            onTap: _openAccountSettings,
+            child: CircleAvatar(
+              radius: 36,
+              backgroundColor: const Color(0xFF1877F2),
+              backgroundImage:
+                  _photoBytes != null ? MemoryImage(_photoBytes!) : null,
+              child: _photoBytes != null
+                  ? null
+                  : const Icon(Icons.person, color: Colors.white, size: 36),
+            ),
+          ),
         ),
         const SizedBox(height: 10),
         Text(
