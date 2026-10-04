@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'account_settings_page.dart';
 import 'login_page.dart';
 
 class MenuPage extends StatefulWidget {
@@ -21,10 +22,19 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   void _loadUsername() async {
+    String displayName = await _prefs.getString('display_name') ?? '';
     String savedUsername = await _prefs.getString('username') ?? '';
+    if (!mounted) return;
     setState(() {
-      _username = savedUsername;
+      _username = displayName.isNotEmpty ? displayName : savedUsername;
     });
+  }
+
+  void _openAccountSettings() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const AccountSettingsPage()),
+    );
+    _loadUsername();
   }
 
   void _logout() async {
@@ -55,6 +65,22 @@ class _MenuPageState extends State<MenuPage> {
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         const SizedBox(height: 24),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: ListTile(
+            leading: const Icon(Icons.settings, color: Color(0xFF1877F2)),
+            title: const Text(
+              'Pengaturan Akun',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: _openAccountSettings,
+          ),
+        ),
+        const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,

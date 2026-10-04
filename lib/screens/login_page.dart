@@ -55,7 +55,9 @@ class _LoginPageState extends State<LoginPage> {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (username == _validUsername && password == _validPassword) {
+    final savedPassword = await _prefs.getString('password') ?? _validPassword;
+
+    if (username == _validUsername && password == savedPassword) {
       await _prefs.setBool('isLoggedIn', true);
       await _prefs.setString('username', username);
       if (mounted) _goToHome();
