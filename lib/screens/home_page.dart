@@ -5,6 +5,7 @@ import '../widgets/fb_app_bar.dart';
 import '../widgets/create_post_box.dart';
 import '../widgets/stories_row.dart';
 import '../widgets/post_card.dart';
+import '../widgets/comment_sheet.dart';
 import '../widgets/fb_bottom_nav.dart';
 import '../widgets/reels_page.dart';
 import 'friends_page.dart';
@@ -21,6 +22,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  int _selectedReelIndex = 0;
+  bool _openReelComments = false;
+  int _notificationNavigationVersion = 0;
   late final List<GlobalKey> _postKeys =
       List.generate(_posts.length, (_) => GlobalKey());
 
@@ -80,6 +84,17 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
+    final reelIndex = notification.targetReelIndex;
+    if (reelIndex != null) {
+      setState(() {
+        _selectedReelIndex = reelIndex;
+        _currentIndex = 1;
+        _openReelComments = notification.type == NotifType.comment;
+        _notificationNavigationVersion++;
+      });
+      return;
+    }
+
     final postIndex = notification.targetPostIndex;
     if (postIndex == null || postIndex < 0 || postIndex >= _posts.length) {
       return;
@@ -96,6 +111,19 @@ class _HomePageState extends State<HomePage> {
           alignment: 0.05,
         );
       }
+      if (notification.type == NotifType.comment && mounted) {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          builder: (_) => CommentSheet(
+            post: _posts[postIndex],
+            onAddComment: (comment) => _addComment(_posts[postIndex], comment),
+          ),
+        );
+      }
     });
   }
 
@@ -106,7 +134,10 @@ class _HomePageState extends State<HomePage> {
       body: _buildBody(),
       bottomNavigationBar: FbBottomNav(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: (index) => setState(() {
+          _currentIndex = index;
+          if (index != 1) _openReelComments = false;
+        }),
       ),
     );
   }
@@ -116,7 +147,13 @@ class _HomePageState extends State<HomePage> {
       index: _currentIndex,
       children: [
         _buildFeed(),
-        const ReelsPage(),
+        ReelsPage(
+          key: ValueKey(
+            '$_selectedReelIndex-$_notificationNavigationVersion',
+          ),
+          initialIndex: _selectedReelIndex,
+          openComments: _openReelComments,
+        ),
         const MarketplacePage(),
         const FriendsPage(),
         NotificationPage(onNotificationTap: _handleNotificationTap),

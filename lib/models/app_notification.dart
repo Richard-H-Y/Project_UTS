@@ -6,6 +6,7 @@ class AppNotification {
   final String time;
   final NotifType type;
   final int? targetPostIndex;
+  final int? targetReelIndex;
   bool isRead;
 
   AppNotification({
@@ -14,6 +15,7 @@ class AppNotification {
     required this.time,
     required this.type,
     this.targetPostIndex,
+    this.targetReelIndex,
     this.isRead = false,
   });
 }

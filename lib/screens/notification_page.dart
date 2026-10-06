@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/app_notification.dart';
 import '../widgets/notification_filter_chips.dart';
 import '../widgets/notification_section_header.dart';
@@ -19,11 +20,69 @@ class _NotificationPageState extends State<NotificationPage> {
   bool _onlyUnread = false;
 
   final List<AppNotification> _notifs = [
-    AppNotification(name: 'Richard', message: 'menyukai postingan kamu', time: '5 menit lalu', type: NotifType.like, targetPostIndex: 0),
-    AppNotification(name: 'Surya', message: 'mengomentari postingan kamu: "Keren!"', time: '20 menit lalu', type: NotifType.comment, targetPostIndex: 2),
-    AppNotification(name: 'Elysia', message: 'mengirim permintaan pertemanan', time: '1 jam lalu', type: NotifType.friend),
-    AppNotification(name: 'Andrian', message: 'membagikan postingan baru', time: '3 jam lalu', type: NotifType.post, targetPostIndex: 3, isRead: true),
-    AppNotification(name: 'Kevin', message: 'berulang tahun hari ini', time: '1 hari lalu', type: NotifType.birthday, isRead: true),
+    AppNotification(
+      name: 'Kamu',
+      message: 'membagikan video boss',
+      time: 'Baru saja',
+      type: NotifType.post,
+      targetReelIndex: 0,
+    ),
+    AppNotification(
+      name: 'Richard',
+      message: 'mengomentarimu di video boss: "Keren!"',
+      time: '2 menit lalu',
+      type: NotifType.comment,
+      targetReelIndex: 0,
+    ),
+    AppNotification(
+      name: 'Surya',
+      message: 'mengomentarimu di video boss: "Gokil banget!"',
+      time: '3 menit lalu',
+      type: NotifType.comment,
+      targetReelIndex: 0,
+    ),
+    AppNotification(
+      name: 'Andrian',
+      message: 'mengomentarimu di video boss: "Mantap videonya!"',
+      time: '4 menit lalu',
+      type: NotifType.comment,
+      targetReelIndex: 0,
+    ),
+    AppNotification(
+      name: 'Richard',
+      message: 'menyukai postingan kamu',
+      time: '5 menit lalu',
+      type: NotifType.like,
+      targetPostIndex: 0,
+    ),
+    AppNotification(
+      name: 'Surya',
+      message: 'mengomentari postingan kamu: "Keren!"',
+      time: '20 menit lalu',
+      type: NotifType.comment,
+      targetPostIndex: 2,
+    ),
+    AppNotification(
+      name: 'Elysia',
+      message: 'mengirim permintaan pertemanan',
+      time: '1 jam lalu',
+      type: NotifType.friend,
+    ),
+    AppNotification(
+      name: 'Andrian',
+      message: 'membagikan postingan baru',
+      time: '3 jam lalu',
+      type: NotifType.post,
+      targetPostIndex: 3,
+      isRead: true,
+    ),
+    AppNotification(
+      name: 'Kevin',
+      message: 'berulang tahun hari ini',
+      time: '1 hari lalu',
+      type: NotifType.birthday,
+      isRead: true,
+    ),
   ];
 
   void _markAllRead() {
@@ -62,7 +121,9 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     final unread = _notifs.where((n) => !n.isRead).toList();
-    final read = _onlyUnread ? <AppNotification>[] : _notifs.where((n) => n.isRead).toList();
+    final read = _onlyUnread
+        ? <AppNotification>[]
+        : _notifs.where((n) => n.isRead).toList();
 
     return ListView(
       children: [
@@ -72,7 +133,9 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         if (unread.isEmpty && read.isEmpty)
           NotificationEmptyState(
-            message: _onlyUnread ? 'Semua sudah dibaca' : 'Belum ada notifikasi',
+            message: _onlyUnread
+                ? 'Semua sudah dibaca'
+                : 'Belum ada notifikasi',
           ),
         if (unread.isNotEmpty) ...[
           NotificationSectionHeader(
