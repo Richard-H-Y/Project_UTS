@@ -1,8 +1,9 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_page.dart';
@@ -25,7 +26,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   String _email = '';
   String _phone = '';
   String _bio = '';
-  String _photoPath = '';
+  Uint8List? _photoBytes;
   bool _notifOn = true;
   bool _privateOn = false;
 
@@ -41,7 +42,13 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     final email = await _prefs.getString('email') ?? '';
     final phone = await _prefs.getString('phone') ?? '';
     final bio = await _prefs.getString('bio') ?? '';
-    final photoPath = await _prefs.getString('profile_picture') ?? '';
+    final photoBase64 = await _prefs.getString('profile_picture') ?? '';
+    Uint8List? photoBytes;
+    if (photoBase64.isNotEmpty) {
+      try {
+        photoBytes = base64Decode(photoBase64);
+      } catch (_) {}
+    }
     final notifOn = await _prefs.getBool('notif_on') ?? true;
     final privateOn = await _prefs.getBool('private_on') ?? false;
     if (!mounted) return;
@@ -51,7 +58,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       _email = email;
       _phone = phone;
       _bio = bio;
-      _photoPath = photoPath;
+      _photoBytes = photoBytes;
       _notifOn = notifOn;
       _privateOn = privateOn;
       _isLoading = false;
@@ -62,50 +69,39 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
-  bool get _hasPhoto => _photoPath.isNotEmpty && File(_photoPath).existsSync();
+  bool get _hasPhoto => _photoBytes != null;
+
+  // Camera hanya tersedia di Android/iOS (bukan web/desktop)
+  bool get _cameraSupported =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
 
   Future<void> _pickPhoto(ImageSource source) async {
     try {
       final picked = await ImagePicker().pickImage(
         source: source,
-        maxWidth: 800,
-        maxHeight: 800,
-        imageQuality: 85,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 80,
       );
       if (picked == null) return;
 
-      // Salin ke folder app supaya fotonya tidak hilang
-      final dir = await getApplicationDocumentsDirectory();
-      final newPath =
-          '${dir.path}/profile_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      await File(picked.path).copy(newPath);
-
-      // Hapus foto lama
-      if (_hasPhoto) {
-        try {
-          await File(_photoPath).delete();
-        } catch (_) {}
-      }
-
-      await _prefs.setString('profile_picture', newPath);
+      final bytes = await picked.readAsBytes();
+      await _prefs.setString('profile_picture', base64Encode(bytes));
       if (!mounted) return;
-      setState(() => _photoPath = newPath);
+      setState(() => _photoBytes = bytes);
       _showSnack('Foto profil berhasil diganti');
     } catch (e) {
       if (!mounted) return;
-      _showSnack('Gagal mengambil foto');
+      _showSnack('Gagal mengambil foto: $e');
     }
   }
 
   Future<void> _removePhoto() async {
-    if (_hasPhoto) {
-      try {
-        await File(_photoPath).delete();
-      } catch (_) {}
-    }
     await _prefs.remove('profile_picture');
     if (!mounted) return;
-    setState(() => _photoPath = '');
+    setState(() => _photoBytes = null);
     _showSnack('Foto profil dihapus');
   }
 
@@ -123,14 +119,15 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                 _pickPhoto(ImageSource.gallery);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.photo_camera),
-              title: const Text('Ambil foto'),
-              onTap: () {
-                Navigator.pop(sheetContext);
-                _pickPhoto(ImageSource.camera);
-              },
-            ),
+            if (_cameraSupported)
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Ambil foto'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _pickPhoto(ImageSource.camera);
+                },
+              ),
             if (_hasPhoto)
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
@@ -165,7 +162,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                 CircleAvatar(
                   radius: 52,
                   backgroundColor: const Color(0xFF1877F2),
-                  backgroundImage: _hasPhoto ? FileImage(File(_photoPath)) : null,
+                  backgroundImage: _hasPhoto ? MemoryImage(_photoBytes!) : null,
                   child: _hasPhoto
                       ? null
                       : const Icon(Icons.person, color: Colors.white, size: 52),
@@ -205,6 +202,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     required String currentValue,
     required String prefKey,
     required void Function(String) onSaved,
+    String? alsoSaveTo,
     TextInputType keyboardType = TextInputType.text,
     String? Function(String)? validator,
   }) async {
@@ -250,10 +248,10 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         );
       },
     );
-    controller.dispose();
 
     if (result != null) {
       await _prefs.setString(prefKey, result);
+      if (alsoSaveTo != null) await _prefs.setString(alsoSaveTo, result);
       if (!mounted) return;
       setState(() => onSaved(result));
       _showSnack('$title berhasil disimpan');
@@ -336,9 +334,6 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     );
 
     final newPassword = newController.text;
-    oldController.dispose();
-    newController.dispose();
-    confirmController.dispose();
 
     if (success == true) {
       await _prefs.setString('password', newPassword);
@@ -431,11 +426,22 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               children: [
                 _photoHeader(),
                 _section('Informasi Akun', [
-                  ListTile(
-                    leading: const Icon(Icons.account_circle,
-                        color: Color(0xFF1877F2)),
-                    title: const Text('Username'),
-                    subtitle: Text(_username.isEmpty ? '-' : _username),
+                  _infoTile(
+                    Icons.account_circle,
+                    'Username',
+                    _username,
+                    () => _editField(
+                      title: 'Username',
+                      currentValue: _username,
+                      prefKey: 'account_username',
+                      alsoSaveTo: 'username',
+                      onSaved: (v) => _username = v,
+                      validator: (v) {
+                        if (v.length < 3) return 'Minimal 3 karakter';
+                        if (v.contains(' ')) return 'Tidak boleh ada spasi';
+                        return null;
+                      },
+                    ),
                   ),
                   _infoTile(
                     Icons.badge,
