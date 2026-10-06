@@ -71,7 +71,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   bool get _hasPhoto => _photoBytes != null;
 
-  // Camera hanya tersedia di Android/iOS (bukan web/desktop)
+
   bool get _cameraSupported =>
       !kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.android ||

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'forgot_password_page.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -48,6 +49,12 @@ class _LoginPageState extends State<LoginPage> {
   void _goToHome() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  }
+
+  void _goToForgotPassword() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
     );
   }
 
@@ -150,7 +157,18 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: _goToForgotPassword,
+                  child: const Text(
+                    'Lupa password?',
+                    style: TextStyle(
+                      color: Color(0xFF1877F2),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
                 Text(
                   'notes: pake username "$_validUsername" dan password "$_validPassword" untuk coba login',
                   textAlign: TextAlign.center,
