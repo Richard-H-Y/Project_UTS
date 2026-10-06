@@ -71,7 +71,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   bool get _hasPhoto => _photoBytes != null;
 
-
+ 
   bool get _cameraSupported =>
       !kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.android ||
