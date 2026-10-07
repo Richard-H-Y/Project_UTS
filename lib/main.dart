@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'screens/login_page.dart';
 
 void main() {
-  runApp(const FacebookCloneApp());
+  runApp(const PalfeedCloneApp());
 }
 
-class FacebookCloneApp extends StatelessWidget {
-  const FacebookCloneApp({super.key});
+class PalfeedCloneApp extends StatelessWidget {
+  const PalfeedCloneApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'facebook',
+      title: 'Palfeed',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: const Color(0xFF1877F2),

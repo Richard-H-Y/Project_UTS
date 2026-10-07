@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 const SizedBox(height: 40),
                 const Text(
-                  'facebook',
+                  'Palfeed',
                   style: TextStyle(
                     color: Color(0xFF1877F2),
                     fontWeight: FontWeight.bold,

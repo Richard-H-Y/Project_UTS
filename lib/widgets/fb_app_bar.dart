@@ -22,7 +22,7 @@ class FbAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.white,
       elevation: 1,
       title: const Text(
-        'facebook',
+        'Palfeed',
         style: TextStyle(
           color: Color(0xFF1877F2),
           fontWeight: FontWeight.bold,
