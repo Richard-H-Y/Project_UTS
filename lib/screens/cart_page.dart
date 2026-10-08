@@ -93,6 +93,7 @@ class _CartPageState extends State<CartPage> {
                   children: [
                     Expanded(
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text('Total', style: TextStyle(color: Colors.grey, fontSize: 12)),
